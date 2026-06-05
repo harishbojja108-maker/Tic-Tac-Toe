@@ -1,7 +1,7 @@
 /**
  * Tic-Tac-Toe Web Game with Adaptive AI Difficulty
- * Features Easy, Medium, and Hard difficulty levels
- */
+ * Features Easy, Medium, and Hard difficulty levels into
+ */ 
 
 class TicTacToeGame {
     constructor() {
