@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Tic-Tac-Toe</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+        .cell { width: 60px; height: 60px; border: 1px solid #ccc; display: inline-block; text-align: center; line-height: 60px; font-size: 24px; cursor: pointer; }
+        .board { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe Debug</h1>
+    <div id="debugInfo" class="debug-info">
+        <p>Game Active: <span id="gameActive">false</span></p>
+        <p>Current Player: <span id="currentPlayer">-</span></p>
+        <p>Board Enabled: <span id="boardEnabled">false</span></p>
+    </div>
+    
+    <div class="board" id="board">
+        <div class="cell" data-row="0" data-col="0">-</div>
+        <div class="cell" data-row="0" data-col="1">-</div>
+        <div class="cell" data-row="0" data-col="2">-</div><br>
+        <div class="cell" data-row="1" data-col="0">-</div>
+        <div class="cell" data-row="1" data-col="1">-</div>
+        <div class="cell" data-row="1" data-col="2">-</div><br>
+        <div class="cell" data-row="2" data-col="0">-</div>
+        <div class="cell" data-row="2" data-col="1">-</div>
+        <div class="cell" data-row="2" data-col="2">-</div>
+    </div>
+    
+    <button onclick="testReset()">Test Reset</button>
+    <button onclick="testWin()">Test Win</button>
+    
+    <script>
+        // Simplified game state for debugging
+        let gameState = {
+            gameActive: false,
+            currentPlayer: 'X',
+            board: Array(3).fill().map(() => Array(3).fill(''))
+        };
+        
+        function updateDebugInfo() {
+            document.getElementById('gameActive').textContent = gameState.gameActive;
+            document.getElementById('currentPlayer').textContent = gameState.currentPlayer;
+            document.getElementById('boardEnabled').textContent = 'true'; // Simplified
+        }
+        
+        function testReset() {
+            console.log('Testing reset...');
+            gameState.gameActive = true;
+            gameState.currentPlayer = 'X';
+            gameState.board = Array(3).fill().map(() => Array(3).fill(''));
+            
+            // Update visual board
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.textContent = '-';
+                cell.style.backgroundColor = 'white';
+            });
+            
+            updateDebugInfo();
+            console.log('Reset complete:', gameState);
+        }
+        
+        function testWin() {
+            console.log('Testing win scenario...');
+            gameState.gameActive = false;
+            
+            // Simulate a win
+            document.querySelector('[data-row="0"][data-col="0"]').textContent = 'X';
+            document.querySelector('[data-row="0"][data-col="1"]').textContent = 'X';
+            document.querySelector('[data-row="0"][data-col="2"]').textContent = 'X';
+            
+            // Highlight winning cells
+            document.querySelector('[data-row="0"][data-col="0"]').style.backgroundColor = 'gold';
+            document.querySelector('[data-row="0"][data-col="1"]').style.backgroundColor = 'gold';
+            document.querySelector('[data-row="0"][data-col="2"]').style.backgroundColor = 'gold';
+            
+            updateDebugInfo();
+            console.log('Win scenario set:', gameState);
+        }
+        
+        // Add click handlers to cells
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', function() {
+                if (!gameState.gameActive || gameState.currentPlayer !== 'X') {
+                    console.log('Cannot click - game not active or not player turn');
+                    return;
+                }
+                
+                const row = parseInt(this.dataset.row);
+                const col = parseInt(this.dataset.col);
+                
+                if (gameState.board[row][col] !== '') {
+                    console.log('Cell already occupied');
+                    return;
+                }
+                
+                console.log(`Player clicks: (${row}, ${col})`);
+                gameState.board[row][col] = 'X';
+                this.textContent = 'X';
+                this.style.backgroundColor = '#e8f5e8';
+                
+                updateDebugInfo();
+            });
+        });
+        
+        // Initialize
+        updateDebugInfo();
+    </script>
+</body>
+</html>

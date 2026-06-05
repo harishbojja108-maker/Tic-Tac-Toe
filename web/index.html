@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe AI - Adaptive Difficulty</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> Tic-Tac-Toe AI</h1>
+            <p>Challenge an AI with adaptive difficulty levels</p>
+        </header>
+
+        <!-- Difficulty Selection Screen -->
+        <div id="difficultyScreen" class="screen active">
+            <div class="difficulty-card">
+                <h2><i class="fas fa-gamepad"></i> Choose Difficulty</h2>
+                <p>Select your preferred challenge level:</p>
+                
+                <div class="difficulty-options">
+                    <button class="difficulty-btn easy" data-level="easy">
+                        <i class="fas fa-smile"></i>
+                        <h3>Easy</h3>
+                        <p>Random moves - Perfect for beginners</p>
+                        <div class="ai-thinking">
+                            <i class="fas fa-brain"></i> AI Level: 25%
+                        </div>
+                    </button>
+                    
+                    <button class="difficulty-btn medium" data-level="medium">
+                        <i class="fas fa-meh"></i>
+                        <h3>Medium</h3>
+                        <p>Limited Minimax - Sometimes makes mistakes</p>
+                        <div class="ai-thinking">
+                            <i class="fas fa-brain"></i> AI Level: 65%
+                        </div>
+                    </button>
+                    
+                    <button class="difficulty-btn hard" data-level="hard">
+                        <i class="fas fa-skull"></i>
+                        <h3>Hard</h3>
+                        <p>Full Minimax - Unbeatable AI</p>
+                        <div class="ai-thinking">
+                            <i class="fas fa-brain"></i> AI Level: 100%
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="difficulty-info">
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Easy: AI makes random moves, great for learning</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Medium: AI uses limited search depth, can make mistakes</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Hard: AI uses full Minimax with Alpha-Beta pruning</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="game-info">
+                    <div class="current-difficulty">
+                        <i class="fas fa-sliders-h"></i>
+                        <span id="currentDifficulty">Medium</span>
+                    </div>
+                    <div class="score-board">
+                        <div class="score-item">
+                            <i class="fas fa-user"></i>
+                            <span>You: <span id="playerScore">0</span></span>
+                        </div>
+                        <div class="score-item">
+                            <i class="fas fa-robot"></i>
+                            <span>AI: <span id="aiScore">0</span></span>
+                        </div>
+                        <div class="score-item">
+                            <i class="fas fa-handshake"></i>
+                            <span>Draws: <span id="drawScore">0</span></span>
+                        </div>
+                    </div>
+                </div>
+                <button id="backToMenu" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Menu
+                </button>
+            </div>
+
+            <div class="game-container">
+                <div class="turn-indicator">
+                    <div id="playerTurn" class="turn-item active">
+                        <i class="fas fa-user"></i>
+                        <span>Your Turn (X)</span>
+                    </div>
+                    <div id="aiTurn" class="turn-item">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Thinking (O)</span>
+                    </div>
+                </div>
+
+                <div class="board-container">
+                    <div id="gameBoard" class="game-board">
+                        <div class="cell" data-row="0" data-col="0">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="0" data-col="1">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="0" data-col="2">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="1" data-col="0">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="1" data-col="1">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="1" data-col="2">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="2" data-col="0">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="2" data-col="1">
+                            <span class="cell-content"></span>
+                        </div>
+                        <div class="cell" data-row="2" data-col="2">
+                            <span class="cell-content"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-controls">
+                    <button id="newGame" class="control-btn">
+                        <i class="fas fa-redo"></i> New Game
+                    </button>
+                    <button id="resetScores" class="control-btn">
+                        <i class="fas fa-trash"></i> Reset Scores
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i id="resultIcon" class="fas fa-trophy"></i>
+                    <h2 id="resultTitle">Game Over!</h2>
+                </div>
+                <div class="modal-body">
+                    <p id="resultMessage">Great game!</p>
+                    <div class="result-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>AI Thinking Time: <span id="thinkingTime">0ms</span></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-search"></i>
+                            <span>Search Depth: <span id="searchDepth">0</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="playAgain" class="btn primary">
+                        <i class="fas fa-play"></i> Play Again
+                    </button>
+                    <button id="changeDifficulty" class="btn secondary">
+                        <i class="fas fa-sliders-h"></i> Change Difficulty
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Thinking Indicator -->
+        <div id="aiThinking" class="ai-thinking-indicator">
+            <div class="thinking-content">
+                <i class="fas fa-brain thinking-icon"></i>
+                <span>AI is thinking...</span>
+                <div class="thinking-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
